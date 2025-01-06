@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # 允许手动触发构建
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,11 +14,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Create bin directory
+        run: mkdir -p bin
+
+      - name: Update package lists (inside container)
+        run: docker run --rm -i openwrt/imagebuilder:rockchip-armv8-23.05.5 opkg update
+
+      - name: Find firmware path in container
+        id: find_firmware
+        run: |
+          FIRMWARE_PATH=$(find /home/build/openwrt/bin -name "*.img" -print -quit)
+          echo "::set-output name=path::$FIRMWARE_PATH"
+        shell: bash
+
       - name: Build OpenWrt Firmware
         run: |
           docker run --rm -i \
-            -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
-            -v "${{ github.workspace }}/config:/home/build/openwrt/config" \
+            -v "${{ github.workspace }}/${{ steps.find_firmware.outputs.path }}:/output.img" \
             openwrt/imagebuilder:rockchip-armv8-23.05.5 \
             make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
-        done
+
+      - name: List files in workspace
+        run: ls -l
+
+      - name: Upload Firmware Artifact
+          uses: actions/upload-artifact@v3
+          with:
+            name: openwrt-firmware
+            path: ${{ steps.find_firmware.outputs.path }}
