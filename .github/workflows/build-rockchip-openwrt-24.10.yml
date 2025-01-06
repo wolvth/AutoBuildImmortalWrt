@@ -1,78 +1,32 @@
-name: build-rockchip-openwrt-24.10
+name: Build OpenWrt Image
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      profile:
-        description: |
-          输入 软路由型号（用逗号分隔的多个值），可选值如下：
-          friendlyarm_nanopi-r4s
-        required: true
-        default: 'friendlyarm_nanopi-r4s'
-      rootfs_partsize:
-        description: '设置软件包大小 单位(MB)'
-        required: true
-        default: '1024'
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set executable permissions
-        run: chmod +x ${{ github.workspace }}/rockchip/build.sh
+      - name: Create output directory
+        run: mkdir -p bin
 
-      - name: Building Rockchip OpenWrt
+      - name: Run OpenWrt Image Builder
         run: |
-          profiles="${{ github.event.inputs.profile }}"
-          rootfs_partsize="${{ github.event.inputs.rootfs_partsize }}"
-          
-          IFS=',' read -r -a profile_array <<< "$profiles"
-          
-          for profile in "${profile_array[@]}"; do
-            echo "Building for profile: $profile"
-            
-            docker run --rm -i \
+          docker run --rm \
+            -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
+            -it openwrtorg/imagebuilder:rockchip-armv8-24.10.0-rc5 \
+            make image PROFILE="friendlyarm_nanopi-r4s" PACKAGES="luci"
 
-              --user buildbot \
-              -v "${{ github.workspace }}/bin:/builder/bin" \
-              -v "${{ github.workspace }}/files:/builder/files" \
-              -v "${{ github.workspace }}/rockchip/openwrt.config:/builder/.config" \
-              -v "${{ github.workspace }}/rockchip/build.sh:/builder/build.sh" \
-              -e PROFILE=$profile \
-              -e ROOTFS_PARTSIZE=$rootfs_partsize \
-              -e RUN_SETUP=1 \
-              openwrt/imagebuilder:rockchip-armv8-24.10.0-rc5 /bin/bash /builder/build.sh
-          done
-      - name: Generate Firmware SHA-256
-        run: |
-          cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
-          for file in *.img.gz; do
-            sha256sum "$file" > "$file.sha256"
-            sha256sum -c "$file.sha256"
-          done
-
-      - name: Create GitHub Release Info
-        uses: softprops/action-gh-release@v2.1.0
+      - name: Upload OpenWrt Image
+        uses: actions/upload-artifact@v3
         with:
-          tag_name: Autobuild
-          name: OpenWrt-Rockchip
-          body_path: ${{ github.workspace }}/info.md
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: openwrt-images
+          path: bin
 
-      - name: Upload OpenWrt as release assets
-        uses: softprops/action-gh-release@v2.1.0
-        with:
-          tag_name: Autobuild
-          files: |
-            ${{ github.workspace }}/*.img.gz
-            ${{ github.workspace }}/*.sha256
-          token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
