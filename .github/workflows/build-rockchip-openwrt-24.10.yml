@@ -6,8 +6,7 @@ on:
       profile:
         description: |
           输入 软路由型号（用逗号分隔的多个值），可选值如下：
-          ,friendlyarm_nanopi-r4s
-          ,friendlyarm_nanopi-r4se
+          friendlyarm_nanopi-r4s
         required: true
         default: 'friendlyarm_nanopi-r4s'
       rootfs_partsize:
