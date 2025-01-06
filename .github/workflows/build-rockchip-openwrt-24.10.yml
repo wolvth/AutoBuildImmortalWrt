@@ -1,32 +1,30 @@
-name: Build OpenWrt Image
+name: 构建 OpenWrt 固件 (NanoPi R4S)
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Create output directory
-        run: mkdir -p bin
+      - name: 拉取 OpenWrt ImageBuilder 镜像
+        run: docker pull openwrt/imagebuilder:rockchip-armv8-24.10.0-rc5
 
-      - name: Run OpenWrt Image Builder
+      - name: 构建 OpenWrt 固件
         run: |
-          docker run --rm \
-            -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
-            openwrtorg/imagebuilder:rockchip-armv8-23.05.5 \
+          docker run --rm -v ${PWD}:/build \
+            openwrt/imagebuilder:rockchip-armv8-24.10.0-rc5 \
             make image PROFILE="friendlyarm_nanopi-r4s" PACKAGES="luci"
 
-      - name: Upload OpenWrt Image
+      - name: 列出构建产物
+        run: ls -l /build/bin/targets/rockchip/armv8/
+
+      - name: 上传固件到 GitHub Actions Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: openwrt-images
-          path: bin
-
+          name: openwrt-firmware
+          path: /build/bin/targets/rockchip/armv8/*img* # 只上传镜像文件
