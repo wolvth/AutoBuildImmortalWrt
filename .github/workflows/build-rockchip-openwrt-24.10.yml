@@ -9,7 +9,7 @@ on:
           ,friendlyarm_nanopi-r4s
           ,friendlyarm_nanopi-r4se
         required: true
-        default: 'friendlyarm_nanopi-r3s'
+        default: 'friendlyarm_nanopi-r4s'
       rootfs_partsize:
         description: '设置软件包大小 单位(MB)'
         required: true
