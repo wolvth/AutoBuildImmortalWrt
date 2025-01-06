@@ -37,14 +37,15 @@ jobs:
             echo "Building for profile: $profile"
             
             docker run --rm -i \
-              --user root \
+
+              --user buildbot \
               -v "${{ github.workspace }}/bin:/builder/bin" \
               -v "${{ github.workspace }}/files:/builder/files" \
               -v "${{ github.workspace }}/rockchip/openwrt.config:/builder/.config" \
               -v "${{ github.workspace }}/rockchip/build.sh:/builder/build.sh" \
               -e PROFILE=$profile \
               -e ROOTFS_PARTSIZE=$rootfs_partsize \
-              
+              -e RUN_SETUP=1 \
               openwrt/imagebuilder:rockchip-armv8-24.10.0-rc5 /bin/bash /builder/build.sh
           done
       - name: Generate Firmware SHA-256
