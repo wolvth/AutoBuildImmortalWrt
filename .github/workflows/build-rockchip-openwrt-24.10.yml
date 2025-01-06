@@ -22,7 +22,7 @@ jobs:
           docker run --rm \
             -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
             -v "${{ github.workspace }}/config:/home/build/openwrt/config" \
-            -it openwrt/imagebuilder:rockchip-armv8-23.05.5 \
+            openwrt/imagebuilder:rockchip-armv8-23.05.5 \
             make image PROFILE=rockchip-armv8 PACKAGES="luci -ppp -pppoe"
 
       - name: Find firmware path in container
