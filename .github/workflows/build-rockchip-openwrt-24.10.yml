@@ -22,8 +22,21 @@ jobs:
             openwrt/imagebuilder:rockchip-armv8-23.05.5 \
             make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
             
-      - name: Upload firmware
-        uses: actions/upload-artifact@v3
+      - name: Generate Firmware SHA-256
+        run: |
+          cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
+          for file in *.img.gz; do
+            sha256sum "$file" > "$file.sha256"
+            sha256sum -c "$file.sha256"
+          done
+          
+      - name: Upload ImmortWrt as release assets
+        uses: softprops/action-gh-release@v2.1.0
         with:
-          name: openwrt-firmware
-          path: ./bin/targets/rockchip/armv8/*
+          tag_name: Autobuild
+          files: |
+            ${{ github.workspace }}/*.img.gz
+            ${{ github.workspace }}/*.sha256
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
