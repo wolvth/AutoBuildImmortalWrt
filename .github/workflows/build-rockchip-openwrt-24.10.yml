@@ -21,4 +21,4 @@ jobs:
             -v "${{ github.workspace }}/config:/home/build/openwrt/config" \
             openwrt/imagebuilder:rockchip-armv8-23.05.5 \
             make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
-            ls -alh /home/build/openwrt/bin/targets/rockchip/armv8
+          done
