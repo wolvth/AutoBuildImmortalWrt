@@ -26,7 +26,7 @@ jobs:
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/rockchip/build.sh
 
-      - name: Building Rockchip ImmortalWrt
+      - name: Building Rockchip OpenWrt
         run: |
           profiles="${{ github.event.inputs.profile }}"
           rootfs_partsize="${{ github.event.inputs.rootfs_partsize }}"
@@ -59,14 +59,14 @@ jobs:
         uses: softprops/action-gh-release@v2.1.0
         with:
           tag_name: Autobuild
-          name: ImmortWrt-Rockchip
+          name: OpenWrt-Rockchip
           body_path: ${{ github.workspace }}/info.md
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload ImmortWrt as release assets
+      - name: Upload OpenWrt as release assets
         uses: softprops/action-gh-release@v2.1.0
         with:
           tag_name: Autobuild
