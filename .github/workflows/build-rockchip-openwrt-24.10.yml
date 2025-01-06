@@ -21,7 +21,7 @@ jobs:
         run: |
           docker run --rm \
             -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
-            openwrtorg/imagebuilder:rockchip-armv8-24.10.0-rc5 \
+            openwrtorg/imagebuilder:rockchip-armv8-23.05.5 \
             make image PROFILE="friendlyarm_nanopi-r4s" PACKAGES="luci"
 
       - name: Upload OpenWrt Image
