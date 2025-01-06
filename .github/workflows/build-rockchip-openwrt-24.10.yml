@@ -25,33 +25,22 @@ jobs:
             openwrt/imagebuilder:rockchip-armv8-23.05.5 \
             make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
 
-      - name: Generate Firmware SHA-256
+
+      - name: Check if firmware exists
         run: |
-          cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
-          for file in *.img.gz; do
-            sha256sum "$file" > "$file.sha256"
-            sha256sum -c "$file.sha256"
-          done
+          ls -alh ./bin  # 打印 bin 目录内容，确保固件文件生成
 
-      - name: Create GitHub Release Info
-        uses: softprops/action-gh-release@v2.1.0
+      - name: Upload firmware
+        uses: actions/upload-artifact@v3
         with:
-          tag_name: Autobuild
-          name: OpenWrt-Rockchip
-          body_path: ${{ github.workspace }}/info.md
-          draft: false
-          prerelease: false
+          name: openwrt-firmware
+          path: ./bin/* # 确保正确匹配生成的固件文件
+          if-no-files-found: error # 如果没有找到文件，抛出错误，防止遗漏
+          include-hidden-files: false
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./bin/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload OpenWrt firmware as release assets
-        uses: softprops/action-gh-release@v2.1.0
-        with:
-          tag_name: Autobuild
-          files: |
-            ${{ github.workspace }}/*.img.gz
-            ${{ github.workspace }}/*.sha256
-          token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
