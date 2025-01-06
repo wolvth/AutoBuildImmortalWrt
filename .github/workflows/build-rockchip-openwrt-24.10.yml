@@ -39,6 +39,6 @@ jobs:
 
       - name: Upload Firmware Artifact
         uses: actions/upload-artifact@v3
-          with:
+        with:
             name: openwrt-firmware
             path: ${{ steps.find_firmware.outputs.path }}
