@@ -17,9 +17,6 @@ jobs:
       - name: Create bin directory
         run: mkdir -p bin
 
-      - name: Update package lists (inside container)
-        run: docker run --rm -i openwrt/imagebuilder:rockchip-armv8-23.05.5 opkg update
-
       - name: Build OpenWrt Firmware
         run: |
           docker run --rm \
