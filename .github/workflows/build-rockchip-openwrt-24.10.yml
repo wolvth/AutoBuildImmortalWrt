@@ -16,9 +16,9 @@ jobs:
 
       - name: Build OpenWrt Firmware
         run: |
-          docker run --rm \
+          docker run --rm -i \
             -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
             -v "${{ github.workspace }}/config:/home/build/openwrt/config" \
             openwrt/imagebuilder:rockchip-armv8-23.05.5 \
             make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
-          done
+        done
