@@ -20,20 +20,20 @@ jobs:
       - name: Update package lists (inside container)
         run: docker run --rm -i openwrt/imagebuilder:rockchip-armv8-23.05.5 opkg update
 
-      - name: Find firmware path in container
-        id: find_firmware
-        run: |
-          FIRMWARE_PATH=$(find /home/build/openwrt/bin -name "*.img" -print -quit)
-          echo "::set-output name=path::$FIRMWARE_PATH"
-        shell: bash
-
       - name: Build OpenWrt Firmware
         run: |
           docker run --rm -i \
             -v "${{ github.workspace }}/${{ steps.find_firmware.outputs.path }}:/output.img" \
             openwrt/imagebuilder:rockchip-armv8-23.05.5 \
             make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
-
+            
+      - name: Find firmware path in container
+        id: find_firmware
+        run: |
+          FIRMWARE_PATH=$(find /home/build/openwrt/bin -name "*.img" -print -quit)
+          echo "::set-output name=path::$FIRMWARE_PATH"
+        shell: bash
+        
       - name: List files in workspace
         run: ls -l
 
