@@ -38,7 +38,7 @@ jobs:
         run: ls -l
 
       - name: Upload Firmware Artifact
-          uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3
           with:
             name: openwrt-firmware
             path: ${{ steps.find_firmware.outputs.path }}
