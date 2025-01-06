@@ -22,10 +22,11 @@ jobs:
 
       - name: Build OpenWrt Firmware
         run: |
-          -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
-          -v "${{ github.workspace }}/config:/home/build/openwrt/config" \
-          openwrt/imagebuilder:rockchip-armv8-23.05.5 \
-          make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
+          docker run --rm \
+            -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
+            -v "${{ github.workspace }}/config:/home/build/openwrt/config" \
+            -it openwrt/imagebuilder:rockchip-armv8-23.05.5 \
+            make image PROFILE=rockchip-armv8 PACKAGES="luci -ppp -pppoe"
 
       - name: Find firmware path in container
         id: find_firmware
