@@ -18,6 +18,7 @@ jobs:
         run: |
           docker run --rm -i \
             -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
+            -v "${{ github.workspace }}/rockchip/imm.config:/home/build/openwrt/.config" \
             openwrt/imagebuilder:rockchip-armv8-24.10.0-rc5 \
             make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
           ls -l ${{ github.workspace }}/bin
