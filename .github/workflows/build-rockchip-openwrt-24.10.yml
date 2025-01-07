@@ -20,7 +20,7 @@ jobs:
           docker run --rm -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
           openwrt/imagebuilder:x86-64-openwrt-23.05 \
           make image PROFILE="x86-64"
-          done
+
           
 
       
