@@ -18,7 +18,7 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Cache Docker layers
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: /tmp/.buildx-cache
         key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -27,6 +27,6 @@ jobs:
 
     - name: Build OpenWrt firmware
       run: |
-        docker run --rm -v $PWD:/home/build openwrt/imagebuilder:23.05.5 /bin/bash -c "
+        docker run --rm -v $PWD:/home/build openwrt/imagebuilder:rockchip-armv8-24.10.0-rc5 /bin/bash -c "
           cd /home/build && \
           make image PROFILE=friendlyarm_nanopi-r4s PACKAGES='luci btop' "
