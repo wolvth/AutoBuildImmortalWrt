@@ -9,27 +9,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Pull Imagebuilder Docker image
-        run: docker pull openwrt/imagebuilder:x86-64-openwrt-23.05
-
-      - name: Build Firmware
+      - name: Build OpenWrt Firmware
         run: |
-          docker run --rm \
-          -v "${{ github.workspace }}/output:/home/build/openwrt/bin \
-          openwrt/imagebuilder:x86-64-openwrt-23.05 \
-          make image PROFILE=x86-64 PACKAGES="luci"
+          docker run --rm -v $(pwd)/output:/home/build/openwrt/bin openwrt/imagebuilder:x86-64-openwrt-23.05 \
+          make image PROFILE="x86-64"
 
-      - name: List Output Directory
-        run: ls -la $(pwd)/output
-
-      - name: Upload Firmware Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: firmware
-          path: ./output
+          path: output/
