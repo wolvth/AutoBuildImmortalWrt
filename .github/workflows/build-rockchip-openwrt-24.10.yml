@@ -35,4 +35,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: openwrt-firmware
-        path: /home/build/bin/targets/x86/64/*   # Adjust this path to match where the firmware is generated
+        path: /home/build/bin/targets/armv8/rockchip/*   # Adjust this path to match where the firmware is generated
