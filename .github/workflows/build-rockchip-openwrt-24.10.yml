@@ -1,28 +1,56 @@
-name: Build OpenWrt Firmware
+name: build-x86-64-immortalwrt-24.10
 
-# Manually trigger the workflow
 on:
   workflow_dispatch:
+    inputs:
+      profile:
+        description: '请输入要编译固件大小 单位(MB)'
+        required: true
+        default: '1024'
+      include_docker:
+        description: |
+          是否编译 Docker 插件
+        required: true
+        default: 'yes'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      - name: Set executable permissions
+        run: chmod +x ${{ github.workspace }}/x86-64/build.sh
 
-      - name: Build OpenWrt Firmware
+      - name: Build ImmortalWrt-x86-64-eif
         run: |
-          docker run --rm \
-          -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
-           mopenwrt/imagebuilder:x86-64-openwrt-23.05 \
-           make image PROFILE="x86-64"
-
+          profiles="${{ github.event.inputs.profile }}"
+          include_docker="${{ github.event.inputs.include_docker }}"
+          IFS=',' read -r -a profile_array <<< "$profiles"
           
+          for profile in "${profile_array[@]}"; do
+            echo "Building for profile: $profile"
+            
+            docker run --rm -i \
+              --user root \
+              -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
+              -v "${{ github.workspace }}/x86-64/imm.config:/home/build/immortalwrt/.config" \
+              -v "${{ github.workspace }}/x86-64/24.10/build.sh:/home/build/immortalwrt/build.sh" \
+              -e PROFILE=$profile \
+              -e INCLUDE_DOCKER=$include_docker \
+              openwrt/imagebuilder:x86-64-openwrt-23.05 /bin/bash /home/build/immortalwrt/build.sh
+          done
 
-      
-
+      - name: Generate Firmware SHA-256
+        run: |
+          cp ${{ github.workspace }}/bin/targets/x86/64/*squashfs-combined-efi.img.gz ${{ github.workspace }}
+          for file in *squashfs-combined-efi.img.gz; do
+            sha256sum "$file" > "$file.sha256"
+            sha256sum -c "$file.sha256"
+          done
