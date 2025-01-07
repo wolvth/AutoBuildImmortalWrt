@@ -17,7 +17,7 @@ jobs:
 
       - name: Build OpenWrt Firmware
         run: |
-          docker run --rm -v $(pwd)/output:/home/build/openwrt/bin openwrt/imagebuilder:x86-64-openwrt-23.05 \
+          docker run --rm -v ${{ github.workspace }}/output:/home/build/openwrt/bin openwrt/imagebuilder:x86-64-openwrt-23.05 \
           make image PROFILE="x86-64"
 
       - name: Upload firmware artifacts
