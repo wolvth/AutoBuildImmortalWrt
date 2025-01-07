@@ -25,9 +25,11 @@ jobs:
 
     - name: Build OpenWrt firmware
       run: |
-        docker run --rm -v $PWD:/home/build openwrt/imagebuilder:rockchip-armv8-24.10.0-rc5 /bin/bash -c "\
-          cd /home/build && \
-          make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci" "
+          docker run --rm -i \
+            -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
+            openwrt/imagebuilder:rockchip-armv8-24.10.0-rc5 \
+            make image PROFILE=friendlyarm_nanopi-r4s PACKAGES="luci"
+
 
     - name: Upload firmware as artifact
       uses: actions/upload-artifact@v4
