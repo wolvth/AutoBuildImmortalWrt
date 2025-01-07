@@ -29,4 +29,4 @@ jobs:
       run: |
         docker run --rm -v $PWD:/home/build openwrt/imagebuilder:23.05.5 /bin/bash -c "
           cd /home/build && \
-          make image PROFILE=<your-target-profile> PACKAGES='<your-packages>' FILES=<path-to-files-directory> "
+          make image PROFILE=friendlyarm_nanopi-r4s PACKAGES='luci btop' "
