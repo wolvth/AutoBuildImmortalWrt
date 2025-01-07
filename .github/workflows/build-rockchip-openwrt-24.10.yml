@@ -21,7 +21,7 @@ jobs:
           make image PROFILE="x86-64"
 
       - name: Upload firmware artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: firmware
           path: output/
