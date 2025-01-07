@@ -22,12 +22,6 @@ jobs:
           make image PROFILE="x86-64"
           done
           
-      - name: Generate Firmware SHA-256
-        run: |
-          cp ${{ github.workspace }}/bin/targets/x86-64/amd64/*.img.gz ${{ github.workspace }}
-          for file in *.img.gz; do
-            sha256sum "$file" > "$file.sha256"
-            sha256sum -c "$file.sha256"
-          done
+
       
 
