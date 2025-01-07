@@ -30,7 +30,4 @@ jobs:
             sha256sum -c "$file.sha256"
           done
       
-        uses: actions/upload-artifact@v4
-        with:
-          name: firmware
-          path: bin/
+
