@@ -21,7 +21,7 @@ jobs:
       - name: Build Firmware
         run: |
           docker run --rm \
-          -v $(pwd)/output:/home/build/openwrt/bin \
+          -v "${{ github.workspace }}/output:/output \
           openwrt/imagebuilder:x86-64-openwrt-23.05 \
           make image PROFILE=x86-64 PACKAGES="luci"
 
