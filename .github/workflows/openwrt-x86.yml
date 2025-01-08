@@ -26,8 +26,8 @@ jobs:
       - name: Load configuration from repo
         run: |
           find .
-          cat config
-          cat config >> $GITHUB_ENV
+          cat openwrt.config
+          cat openwrt.config >> $GITHUB_ENV
   
       - uses: izer-xyz/openwrt-imagebuilder-action@main
         with:
