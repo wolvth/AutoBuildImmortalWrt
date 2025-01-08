@@ -13,7 +13,6 @@ jobs:
 
       - name: Building Rockchip ImmortalWrt
         run: |
-          #mkdir -p bin && chmod 777 bin && \
             
             docker run --rm -i \
               --user root \
@@ -29,24 +28,9 @@ jobs:
             sha256sum -c "$file.sha256"
           done
       
-      - name: Create GitHub Release Info
-        uses: softprops/action-gh-release@v2.1.0
+      - name: Store packages
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: Autobuild-23.05.4
-          name: ImmortWrt-Rockchip
-          body_path: ${{ github.workspace }}/info.md
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: 23.05.4
+          path: bin/*
 
-      - name: Upload ImmortWrt as release assets
-        uses: softprops/action-gh-release@v2.1.0
-        with:
-          tag_name: Autobuild-23.05.4
-          files: |
-            ${{ github.workspace }}/*.img.gz
-            ${{ github.workspace }}/*.sha256
-          token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
