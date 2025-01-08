@@ -36,7 +36,7 @@ jobs:
           openwrt-version: ${{ env.openwrt_version }}
           packages: ${{ env.packages }}
           debug: ${{ env.debug }}
-          files: files/etc
+          files: files
           rootfs-size: 300
           #debug: 1
           #disabled-services: dhcp
