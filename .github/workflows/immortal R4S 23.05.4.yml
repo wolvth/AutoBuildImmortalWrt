@@ -16,8 +16,11 @@ jobs:
             docker run --rm -i \
               --user root \
               -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
+              -v "${{ github.workspace }}/files:/home/build/immortalwrt/files" \
               immortalwrt/imagebuilder:rockchip-armv8-openwrt-23.05.4 \
-              make image PROFILE="friendlyarm_nanopi-r4s"
+              make image PROFILE="friendlyarm_nanopi-r4s" PACKAGES="ca-bundle dropbear fstools libc libgcc libustream-openssl \
+              -fdisk -autocore -automount -luci-app-cpufreq -block-mount -default-settings-chn -kmod-nf-nathelper \
+              -kmod-nf-nathelper-extra -luci -luci-compat -luci-lib-base -luci-lib-ipkg -luci-app-opkg" FILES="files"
           
       - name: Generate Firmware SHA-256
         run: |
