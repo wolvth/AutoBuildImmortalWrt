@@ -1,0 +1,50 @@
+# This is a basic workflow to help you get started with Actions
+
+name: test
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+ 
+  build:
+  
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      
+      - uses: actions/checkout@v3
+      - name: Load configuration from repo
+        run: |
+          find .
+          cat config
+          cat config >> $GITHUB_ENV
+  
+      - uses: izer-xyz/openwrt-imagebuilder-action@main
+        with:
+          image: x86-64
+          #profile: 
+          openwrt-version: 24.10.0-rc5
+          packages: luci btop -firewall4 -ca-bundle -dnsmasq -dropbear   
+            -kmod-nft-offload -libustream-wolfssl -logd  
+            -nftables -odhcpd-ipv6only -opkg -ppp -ppp-mod-pppoe -uclient-fetch 
+          files: files/etc
+          rootfs-size: 300
+      
+      - name: Store packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: rockchip-armv8
+          path: bin/*
+          
+
+
