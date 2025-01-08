@@ -31,13 +31,15 @@ jobs:
             sha256sum -c "$file.sha256"
           done
           
-      - name: Save firmware file name
-        id: save-firmware-name
-        run: echo "FIRMWARE_FILE=$(ls *.img.gz)" >> $GITHUB_ENV
+      - name: Extract manifest filename
+        id: get-manifest
+        run: |
+          MANIFEST_FILE=$(ls ${{ github.workspace }}/bin/targets/rockchip/armv8/*.manifest | head -n 1)
+          echo "manifest_file_name=$(basename $MANIFEST_FILE)" >> $GITHUB_ENV
 
       - name: Store packages
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.FIRMWARE_FILE }}
-          path: ${{ env.FIRMWARE_FILE }}
+          name: ${{ env.manifest_file_name }}
+          path: /bin/*
 
