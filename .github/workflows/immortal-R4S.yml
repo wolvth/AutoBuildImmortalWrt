@@ -22,6 +22,9 @@ jobs:
               -fdisk -autocore -automount -luci-app-cpufreq -block-mount -default-settings-chn -kmod-nf-nathelper \
               -kmod-nf-nathelper-extra -luci -luci-compat -luci-lib-base -luci-lib-ipkg -luci-app-opkg" \
               FILES="files" ROOTFS_PARTSIZE="512"
+      - name: checkfile        
+        run: |       
+          ls -lh ${{ github.workspace }}/bin/targets/
           
       - name: Generate Firmware SHA-256
         run: |
