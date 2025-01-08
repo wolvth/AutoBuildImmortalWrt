@@ -17,7 +17,7 @@ jobs:
             docker run --rm -i \
               --user root \
               -v "${{ github.workspace }}/bin:/builder/bin:rw" \
-              openwrt/imagebuilder:rockchip-armv8-openwrt-23.05.4 \
+              openwrt/imagebuilder:rockchip-armv8-23.05.4 \
               make image PROFILE="friendlyarm_nanopi-r4s"
 
       - name: Generate Firmware SHA-256
