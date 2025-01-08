@@ -36,7 +36,7 @@ jobs:
           openwrt-version: 24.10.0-rc4
           packages: luci btop -ppp -ppp-mod-pppoe 
           #files: files
-          #rootfs-size: 300
+          rootfs-size: 300
       
       - name: Store packages
         uses: actions/upload-artifact@v4
