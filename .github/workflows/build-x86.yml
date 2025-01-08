@@ -35,7 +35,7 @@ jobs:
           profile: generic
           openwrt-version: 24.10.0-rc4
           packages: luci btop -ppp -ppp-mod-pppoe 
-          #files: files/etc
+          #files: files
           #rootfs-size: 300
       
       - name: Store packages
