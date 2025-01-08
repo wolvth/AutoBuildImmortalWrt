@@ -29,13 +29,6 @@ elif [ "$count" -gt 1 ]; then
   uci set network.lan.ipaddr='192.168.2.1'
 fi
 
-# 检查eth0是否已经被设置为lan接口
-lan_iface=$(uci get network.lan.ifname 2>/dev/null)
-if [ "$lan_iface" = "eth0" ]; then
-  # 如果eth0被设置为lan接口，改用其他接口作为lan
-  uci set network.lan.ifname='eth1'
-fi
-
 
 uci set network.wan.device='eth0'
 uci set network.wan.proto='pppoe'
