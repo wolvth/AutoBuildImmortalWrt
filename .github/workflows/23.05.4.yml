@@ -1,0 +1,52 @@
+name: immortalWrt-23.05.4
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Building Rockchip ImmortalWrt
+        run: |
+          #mkdir -p bin && chmod 777 bin && \
+            
+            docker run --rm -i \
+              --user root \
+              -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
+              immortalwrt/imagebuilder:rockchip-armv8-openwrt-23.05.4 /bin/bash make image PROFILE="friendlyarm_nanopi-r4s"
+          done
+
+      - name: Generate Firmware SHA-256
+        run: |
+          cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
+          for file in *.img.gz; do
+            sha256sum "$file" > "$file.sha256"
+            sha256sum -c "$file.sha256"
+          done
+      
+      - name: Create GitHub Release Info
+        uses: softprops/action-gh-release@v2.1.0
+        with:
+          tag_name: Autobuild-23.05.4
+          name: ImmortWrt-Rockchip
+          body_path: ${{ github.workspace }}/info.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ImmortWrt as release assets
+        uses: softprops/action-gh-release@v2.1.0
+        with:
+          tag_name: Autobuild-23.05.4
+          files: |
+            ${{ github.workspace }}/*.img.gz
+            ${{ github.workspace }}/*.sha256
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
