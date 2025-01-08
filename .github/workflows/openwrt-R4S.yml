@@ -41,5 +41,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.manifest_file_name }}
-          path: /bin/*
+          path: bin/*
 
