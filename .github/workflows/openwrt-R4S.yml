@@ -19,9 +19,11 @@ jobs:
               -v "${{ github.workspace }}/bin:/builder/bin:rw" \
               openwrt/imagebuilder:rockchip-armv8-23.05.4 \
               make image PROFILE="friendlyarm_nanopi-r4s"
-      - name: checkfile        
-        run: |       
-          ls -lh ${{ github.workspace }}/bin/targets/rockchip/armv8
+      #- name: checkfile        
+      #  run: ls -lh ${{ github.workspace }}/bin/targets/rockchip/armv8       
+
+      - name: List files in bin/targets
+        run: ls -lhR ${{ github.workspace }}/bin/targets    
 
       - name: Generate Firmware SHA-256
         run: |
@@ -31,16 +33,16 @@ jobs:
             sha256sum -c "$file.sha256"
           done
           
-      - name: Extract manifest filename
+      - name: Extract manifest filename and path
         id: get-manifest
         run: |
-          MANIFEST_FILE=$(ls ${{ github.workspace }}/bin/targets/rockchip/armv8/*.manifest | head -n 1)
+          MANIFEST_FILE=$(find ${{ github.workspace }}/bin/targets -name "*.manifest" | head -n 1)
           MANIFEST_BASENAME=$(basename "$MANIFEST_FILE" .manifest)
           echo "manifest_file_name=$MANIFEST_BASENAME" >> $GITHUB_ENV
+          echo "manifest_file_path=$(dirname "$MANIFEST_FILE")" >> $GITHUB_ENV
 
-      - name: Store packages
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.manifest_file_name }}
-          path: bin/*
-
+          path: ${{ env.manifest_file_path }}
