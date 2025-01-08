@@ -1,11 +1,8 @@
+#openwrt 配置文件 config >> $GITHUB_ENV
+
 image=rockchip-armv8
-
 profile=friendlyarm_nanopi-r4s
-
 openwrt_version=23.05.5
-
 packages=luci -ppp
-
 disabled_services=
-
 debug=
