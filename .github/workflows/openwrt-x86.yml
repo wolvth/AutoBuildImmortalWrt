@@ -38,11 +38,20 @@ jobs:
           #files: files
           rootfs-size: 300
       
-      - name: Store packages
+      - name: List files in bin/targets
+        run: ls -lhR ${{ github.workspace }}/bin/targets    
+          
+      - name: Extract manifest filename and path
+        id: get-manifest
+        run: |
+          MANIFEST_FILE=$(find ${{ github.workspace }}/bin/targets -name "*.manifest" | head -n 1)
+          MANIFEST_BASENAME=$(basename "$MANIFEST_FILE" .manifest)
+          echo "manifest_file_name=$MANIFEST_BASENAME" >> $GITHUB_ENV
+          echo "manifest_file_path=$(dirname "$MANIFEST_FILE")" >> $GITHUB_ENV
+
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: x86-64
-          path: bin/*
-          
-
+          name: ${{ env.manifest_file_name }}
+          path: ${{ env.manifest_file_path }}
 
