@@ -21,7 +21,7 @@ jobs:
               make image PROFILE="friendlyarm_nanopi-r4s"
       - name: checkfile        
         run: |       
-          ls -lh /builder/bin/targets/rockchip/armv8
+          ls -lh ${{ github.workspace }}/bin/targets/rockchip/armv8
 
       - name: Generate Firmware SHA-256
         run: |
