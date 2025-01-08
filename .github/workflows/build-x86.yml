@@ -32,7 +32,7 @@ jobs:
       - uses: izer-xyz/openwrt-imagebuilder-action@main
         with:
           image: x86-64
-          profile: Default
+          profile: generic
           openwrt-version: 24.10.0-rc4
           packages: luci btop -ppp -ppp-mod-pppoe 
           #files: files/etc
