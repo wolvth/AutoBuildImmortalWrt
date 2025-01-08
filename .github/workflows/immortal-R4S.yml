@@ -22,21 +22,20 @@ jobs:
               -fdisk -autocore -automount -luci-app-cpufreq -block-mount -default-settings-chn -kmod-nf-nathelper \
               -kmod-nf-nathelper-extra -luci -luci-compat -luci-lib-base -luci-lib-ipkg -luci-app-opkg" \
               FILES="files" ROOTFS_PARTSIZE="512"
-      - name: checkfile        
-        run: |      
-          sh -c "find ${{ github.workspace }}/bin -type f -exec ls -lh {} +"
-     
-      - name: Generate Firmware SHA-256
+
+      - name: List files in bin/targets
+        run: ls -lhR ${{ github.workspace }}/bin/targets    
+          
+      - name: Extract manifest filename and path
+        id: get-manifest
         run: |
-          cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
-          for file in *.img.gz; do
-            sha256sum "$file" > "$file.sha256"
-            sha256sum -c "$file.sha256"
-          done
-      
-      - name: Store packages
+          MANIFEST_FILE=$(find ${{ github.workspace }}/bin/targets -name "*.manifest" | head -n 1)
+          MANIFEST_BASENAME=$(basename "$MANIFEST_FILE" .manifest)
+          echo "manifest_file_name=$MANIFEST_BASENAME" >> $GITHUB_ENV
+          echo "manifest_file_path=$(dirname "$MANIFEST_FILE")" >> $GITHUB_ENV
+
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: immortal-R4S
-          path: bin/*
-
+          name: ${{ env.manifest_file_name }}
+          path: ${{ env.manifest_file_path }}
