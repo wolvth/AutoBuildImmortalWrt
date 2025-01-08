@@ -22,7 +22,8 @@ jobs:
               -fdisk -autocore -automount -luci-app-cpufreq -block-mount -default-settings-chn -kmod-nf-nathelper \
               -kmod-nf-nathelper-extra -luci -luci-compat -luci-lib-base -luci-lib-ipkg -luci-app-opkg" \
               FILES="files" ROOTFS_PARTSIZE="512"
-
+      #- name: checkfile        
+      #  run: sh -c "find ${{ github.workspace }}/bin -type f -exec ls -lh {} +"
       - name: List files in bin/targets
         run: ls -lhR ${{ github.workspace }}/bin/targets    
           
