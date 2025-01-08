@@ -45,7 +45,7 @@ jobs:
       - name: Store packages
         uses: actions/upload-artifact@v4
         with:
-          name: rockchip-armv8
+          name: ${{ env.profile }}-${{ env.openwrt_version }}
           path: bin/*
           
 
