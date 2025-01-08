@@ -19,7 +19,7 @@ jobs:
               -v "${{ github.workspace }}/bin:/builder/bin:rw" \
               openwrt/imagebuilder:rockchip-armv8-23.05.4 \
               make image PROFILE="friendlyarm_nanopi-r4s"
-          sh -c "find /bin -type f -exec ls -lh {} +"
+          ls -lh /bin/targets/rockchip/armv8/
 
       - name: Generate Firmware SHA-256
         run: |
