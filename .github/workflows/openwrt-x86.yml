@@ -39,12 +39,12 @@ jobs:
           rootfs-size: 300
       
       - name: List files in bin/targets
-        run: ls -lhR bin/targets    
-        #run: ls -lah bin/  
+        run: ls -lhR bin/
+
       - name: Extract manifest filename and path
         id: get-manifest
         run: |
-          MANIFEST_FILE=$(find ${{ github.workspace }}/bin/targets -name "*.manifest" | head -n 1)
+          MANIFEST_FILE=$(find ${{ github.workspace }}/bin/ -name "*.manifest" | head -n 1)
           MANIFEST_BASENAME=$(basename "$MANIFEST_FILE" .manifest)
           echo "manifest_file_name=$MANIFEST_BASENAME" >> $GITHUB_ENV
           echo "manifest_file_path=$(dirname "$MANIFEST_FILE")" >> $GITHUB_ENV
