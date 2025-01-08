@@ -1,56 +1,43 @@
-name: Build OpenWrt Firmware
+# This is a basic workflow to help you get started with Actions
 
+name: test
+
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    inputs:
-      profile:
-        description: '请输入要编译固件大小 单位(MB)'
-        required: true
-        default: '1024'
-      include_docker:
-        description: |
-          是否编译 Docker 插件
-        required: true
-        default: 'yes'
-        type: choice
-        options:
-          - 'yes'
-          - 'no'
 
 jobs:
+ 
   build:
+  
     runs-on: ubuntu-22.04
+    timeout-minutes: 10
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      
+      - uses: actions/checkout@v3
 
-      - name: Set executable permissions
-        run: chmod +x ${{ github.workspace }}/x86-64/build.sh
+  
+      - uses: izer-xyz/openwrt-imagebuilder-action@main
+        with:
+          image: rockchip-armv8
+          profile: friendlyarm_nanopi-r4s
+          openwrt-version: 23.05.4
+          packages: >-
+            -firewall4 -ca-bundle -dnsmasq -dropbear   
+            -kmod-nft-offload -libustream-wolfssl -logd  
+            -nftables -odhcpd-ipv6only -opkg -ppp -ppp-mod-pppoe -uclient-fetch 
+          rootfs-size: 10
+          #debug: 1
+          #disabled-services: dhcp
+         # extra-image-name: useless
 
-      - name: Build ImmortalWrt-x86-64-eif
-        run: |
-          profiles="${{ github.event.inputs.profile }}"
-          include_docker="${{ github.event.inputs.include_docker }}"
-          IFS=',' read -r -a profile_array <<< "$profiles"
-          
-          for profile in "${profile_array[@]}"; do
-            echo "Building for profile: $profile"
-            
-            docker run --rm -i \
-              --user root \
-              -v "${{ github.workspace }}/bin:/home/build/openwrt/bin" \
-              -v "${{ github.workspace }}/x86-64/imm.config:/home/build/immortalwrt/.config" \
-              -v "${{ github.workspace }}/x86-64/24.10/build.sh:/home/build/immortalwrt/build.sh" \
-              -e PROFILE=$profile \
-              -e INCLUDE_DOCKER=$include_docker \
-              openwrt/imagebuilder:x86-64-openwrt-23.05 /bin/bash /home/build/immortalwrt/build.sh
-          done
 
-      - name: Generate Firmware SHA-256
-        run: |
-          cp ${{ github.workspace }}/bin/targets/x86/64/*squashfs-combined-efi.img.gz ${{ github.workspace }}
-          for file in *squashfs-combined-efi.img.gz; do
-            sha256sum "$file" > "$file.sha256"
-            sha256sum -c "$file.sha256"
-          done
+
