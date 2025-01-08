@@ -39,8 +39,8 @@ jobs:
           rootfs-size: 300
       
       - name: List files in bin/targets
-        run: ls -lhR ${{ github.workspace }}/bin/targets    
-          
+        run: ls -lhR bin/targets    
+        #run: ls -lah bin/  
       - name: Extract manifest filename and path
         id: get-manifest
         run: |
