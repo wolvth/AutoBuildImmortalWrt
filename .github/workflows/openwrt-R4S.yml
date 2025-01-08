@@ -35,7 +35,8 @@ jobs:
         id: get-manifest
         run: |
           MANIFEST_FILE=$(ls ${{ github.workspace }}/bin/targets/rockchip/armv8/*.manifest | head -n 1)
-          echo "manifest_file_name=$(basename $MANIFEST_FILE)" >> $GITHUB_ENV
+          MANIFEST_BASENAME=$(basename "$MANIFEST_FILE" .manifest)
+          echo "manifest_file_name=$MANIFEST_BASENAME" >> $GITHUB_ENV
 
       - name: Store packages
         uses: actions/upload-artifact@v4
