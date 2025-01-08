@@ -31,17 +31,17 @@ jobs:
   
       - uses: izer-xyz/openwrt-imagebuilder-action@main
         with:
-          image: x86-generic
+          image: x86-64
           profile: generic
-          openwrt-version: 24.10.0-rc5
+          openwrt-version: 24.10.0-rc4
           packages: luci btop -ppp -ppp-mod-pppoe 
-          files: files/etc
-          rootfs-size: 300
+          #files: files/etc
+          #rootfs-size: 300
       
       - name: Store packages
         uses: actions/upload-artifact@v4
         with:
-          name: x86-generic
+          name: x86-64
           path: bin/*
           
 
