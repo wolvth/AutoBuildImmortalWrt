@@ -18,7 +18,7 @@ jobs:
             docker run --rm -i \
               --user root \
               -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
-              immortalwrt/imagebuilder:rockchip-armv8-openwrt-23.05.4 /bin/bash make image PROFILE="friendlyarm_nanopi-r4s"
+              immortalwrt/imagebuilder:rockchip-armv8-openwrt-23.05.4 make image PROFILE="friendlyarm_nanopi-r4s"
           done
 
       - name: Generate Firmware SHA-256
