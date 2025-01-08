@@ -13,13 +13,12 @@ jobs:
 
       - name: Building Rockchip ImmortalWrt
         run: |
-            
             docker run --rm -i \
               --user root \
               -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
-              immortalwrt/imagebuilder:rockchip-armv8-openwrt-23.05.4 make image PROFILE="friendlyarm_nanopi-r4s"
+              immortalwrt/imagebuilder:rockchip-armv8-openwrt-23.05.4 \
+              make image PROFILE="friendlyarm_nanopi-r4s"
           
-
       - name: Generate Firmware SHA-256
         run: |
           cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
