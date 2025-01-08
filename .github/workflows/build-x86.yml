@@ -32,18 +32,16 @@ jobs:
       - uses: izer-xyz/openwrt-imagebuilder-action@main
         with:
           image: x86-generic
-          #profile: 
+          profile: generic
           openwrt-version: 24.10.0-rc5
-          packages: luci btop -firewall4 -ca-bundle -dnsmasq -dropbear   
-            -kmod-nft-offload -libustream-wolfssl -logd  
-            -nftables -odhcpd-ipv6only -opkg -ppp -ppp-mod-pppoe -uclient-fetch 
+          packages: luci btop -ppp -ppp-mod-pppoe 
           files: files/etc
           rootfs-size: 300
       
       - name: Store packages
         uses: actions/upload-artifact@v4
         with:
-          name: rockchip-armv8
+          name: x86-generic
           path: bin/*
           
 
