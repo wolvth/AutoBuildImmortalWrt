@@ -23,9 +23,9 @@ jobs:
               -kmod-nf-nathelper-extra -luci -luci-compat -luci-lib-base -luci-lib-ipkg -luci-app-opkg" \
               FILES="files" ROOTFS_PARTSIZE="512"
       - name: checkfile        
-        run: |       
-          ls -lh ${{ github.workspace }}/bin/targets/
-          
+        run: |      
+          sh -c "find ${{ github.workspace }}/bin -type f -exec ls -lh {} +"
+     
       - name: Generate Firmware SHA-256
         run: |
           cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
