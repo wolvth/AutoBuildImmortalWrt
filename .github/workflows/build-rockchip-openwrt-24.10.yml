@@ -29,11 +29,9 @@ jobs:
         with:
           image: rockchip-armv8
           profile: friendlyarm_nanopi-r4s
-          openwrt-version: 23.05.4
-          packages: >-
-            -firewall4 -ca-bundle -dnsmasq -dropbear   
-            -kmod-nft-offload -libustream-wolfssl -logd  
-            -nftables -odhcpd-ipv6only -opkg -ppp -ppp-mod-pppoe -uclient-fetch 
+          openwrt-version: 24.10.0-rc5
+          packages: luci
+          rootfs-size: 300
           #debug: 1
           #disabled-services: dhcp
          # extra-image-name: useless
