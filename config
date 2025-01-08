@@ -1,8 +1,10 @@
-image=bcm27xx-bcm2711
+image=rockchip-armv8
 
-openwrt_version=23.05.0
+profile=friendlyarm_nanopi-r4s
 
-packages=block-mount -iwinfo
+openwrt_version=23.05.5
+
+packages=luci -ppp
 
 disabled_services=
 
