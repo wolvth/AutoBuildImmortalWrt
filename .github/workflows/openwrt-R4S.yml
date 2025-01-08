@@ -1,4 +1,4 @@
-name: sunxi-cortexa53-24.10
+name: openwrt-R4S
 
 on:
   workflow_dispatch:
@@ -34,5 +34,5 @@ jobs:
       - name: Store packages
         uses: actions/upload-artifact@v4
         with:
-          name: openwrt-R4S-23.05.4
+          name: openwrt-R4S
           path: bin/*
